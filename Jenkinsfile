@@ -7,7 +7,8 @@ pipeline {
         stage ('Build'){
             steps {
                 // using maven
-                mvn clean package 
+                echo "********** Building Eureka Application *************"
+                sh "mvn clean package"
             }
         }
     }
