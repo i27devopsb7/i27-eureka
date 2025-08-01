@@ -20,6 +20,7 @@ pipeline {
         // SONAR_TOKEN = credentials('sonar_creds')
 
         DOCKER_HUB = "docker.io/i27devopsb7"
+        DOCKER_CREDS = credentials('dockerhub_creds')
 
     }
 
@@ -68,7 +69,10 @@ pipeline {
                 echo "************* Building the Docker image ***************"
                 sh "cp target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd"
                 sh "docker build --no-cache --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT ./.cicd"
-                
+                echo "******************************************** Docker Login *********************************"
+                sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+                echo "******************************************** Docker Push *********************************"
+                sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
                 // docker.io/i27devopsb7/eureka:v
             }
         } 
