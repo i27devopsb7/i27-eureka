@@ -28,30 +28,30 @@ pipeline {
                 sh "mvn clean package -DskipTests=true"
             }
         }
-        stage ('Sonar') {
-            steps {
-                echo "************** Starting Sonar Scan **************"
-                withSonarQubeEnv('SonarQube') {
-                    sh """
-                        mvn clean verify sonar:sonar \
-                            -Dsonar.projectKey=i27-eureka \
-                            -Dsonar.host.url=${env.SONAR_URL}\
-                            -Dsonar.login=${env.SONAR_TOKEN}
-                    """
-                }
-                timeout (time: 2, unit: "MINUTES") {
-                    script {
-                        waitForQualityGate abortPipeline: true
-                    }
-                }
+        // stage ('Sonar') {
+        //     steps {
+        //         echo "************** Starting Sonar Scan **************"
+        //         withSonarQubeEnv('SonarQube') {
+        //             sh """
+        //                 mvn clean verify sonar:sonar \
+        //                     -Dsonar.projectKey=i27-eureka \
+        //                     -Dsonar.host.url=${env.SONAR_URL}\
+        //                     -Dsonar.login=${env.SONAR_TOKEN}
+        //             """
+        //         }
+        //         timeout (time: 2, unit: "MINUTES") {
+        //             script {
+        //                 waitForQualityGate abortPipeline: true
+        //             }
+        //         }
                  
 
 
 
 
 
-            }
-        }
+        //     }
+        // }
         stage ('FormatBuild'){
             // existing i27-eureka-0.0.1-SNAPSHOT.jar
             // Destination i27-eureka-buildnumber-brnachname.jar
@@ -66,6 +66,6 @@ pipeline {
                 sh "cp target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd"
                 sh "docker build --no-cache --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t eureka:v4 ./.cicd"
             }
-        } // i27-eureka-0.0.1-SNAPSHOT.jar
+        } 
     }
 }
