@@ -21,6 +21,7 @@ pipeline {
 
         DOCKER_HUB = "docker.io/i27devopsb7"
         DOCKER_CREDS = credentials('dockerhub_creds')
+        //DOCKER_VM = "35.202.42.232"
 
     }
 
@@ -76,5 +77,16 @@ pipeline {
                 // docker.io/i27devopsb7/eureka:v
             }
         } 
+        stage ('Deploy To Dev') {
+            steps {
+                echo "Deploying to Dev Environment"
+                //sshpass -p ***** -v ssh -o StrictHostKeyChecking=no USERNAME@IPADDRESS
+                // ssh username@ipaddress 
+                withCredentials([usernamePassword(credentialsId: 'john_docker_vm_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        // some block
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"whoami\""
+                }
+            }
+        }
     }
 }
