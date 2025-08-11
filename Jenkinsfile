@@ -95,6 +95,24 @@ pipeline {
                 }
             }
         }
+        stage ('Deploy To test') {
+            steps {
+                echo "Deploying to test Environment"
+                //sshpass -p ***** -v ssh -o StrictHostKeyChecking=no USERNAME@IPADDRESS
+                // ssh username@ipaddress 
+                withCredentials([usernamePassword(credentialsId: 'john_docker_vm_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        // some block
+                    // stop the container
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker stop ${APPLICATION_NAME}-test\""
+
+                    // remove the container
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker rm ${APPLICATION_NAME}-test\""
+                    
+                    // Creating a container
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker run --name ${APPLICATION_NAME}-test -p 6761:8761 -d ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT\""
+                }
+            }
+        }
     }
 }
 
