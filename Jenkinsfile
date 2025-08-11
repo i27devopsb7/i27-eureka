@@ -84,9 +84,17 @@ pipeline {
                 // ssh username@ipaddress 
                 withCredentials([usernamePassword(credentialsId: 'john_docker_vm_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         // some block
-                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"hostname -i\""
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker run --name ${APPLICATION_NAME}-dev -p 5761:8761 -d ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT\""
                 }
             }
         }
     }
 }
+
+
+//  hostport:containerport
+
+// dev > 5761:8761
+// test > 6761:8761
+// stage > 7761:8761
+//prod > 8761:8761
