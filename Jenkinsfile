@@ -67,7 +67,9 @@ pipeline {
         }
         stage ('DockerBuildAndPush') {
             steps {
-                dockerBuildAndPush().call()
+                script {
+                    dockerBuildAndPush().call()
+                }
                 // docker.io/i27devopsb7/eureka:v
             }
         } 
