@@ -27,28 +27,28 @@ pipeline {
 
     // parameters
     parameters {
-        choice(name: 'buildOnly'
-            choices: 'no\nyes'
+        choice(name: 'buildOnly',
+            choices: 'no\nyes',
             description: 'This will only build the application'
         )
-        choice(name: 'dockerPush'
-            choices: 'no\nyes'
+        choice(name: 'dockerPush',
+            choices: 'no\nyes',
             description: 'This will only push the docker image to registry'
         )
-        choice(name: 'deployToDev'
-            choices: 'no\nyes'
+        choice(name: 'deployToDev',
+            choices: 'no\nyes',
             description: 'This will deploy the application to dev environment'
         )
-        choice(name: 'deployToTest'
-            choices: 'no\nyes'
+        choice(name: 'deployToTest',
+            choices: 'no\nyes',
             description: 'This will deploy the application to test environment'
         )
-        choice(name: 'deployToStage'
-            choices: 'no\nyes'
+        choice(name: 'deployToStage',
+            choices: 'no\nyes',
             description: 'This will deploy the application to stage environment'
         )
-        choice(name: 'deployToProd'
-            choices: 'no\nyes'
+        choice(name: 'deployToProd',
+            choices: 'no\nyes',
             description: 'This will deploy the application to prod environment'
         )
     }
