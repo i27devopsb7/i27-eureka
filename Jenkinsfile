@@ -25,6 +25,35 @@ pipeline {
 
     }
 
+    // parameters
+    parameters {
+        choice(name: 'buildOnly'
+            choices: 'no\nyes'
+            description: 'This will only build the application'
+        )
+        choice(name: 'dockerPush'
+            choices: 'no\nyes'
+            description: 'This will only push the docker image to registry'
+        )
+        choice(name: 'deployToDev'
+            choices: 'no\nyes'
+            description: 'This will deploy the application to dev environment'
+        )
+        choice(name: 'deployToTest'
+            choices: 'no\nyes'
+            description: 'This will deploy the application to test environment'
+        )
+        choice(name: 'deployToStage'
+            choices: 'no\nyes'
+            description: 'This will deploy the application to stage environment'
+        )
+        choice(name: 'deployToProd'
+            choices: 'no\nyes'
+            description: 'This will deploy the application to prod environment'
+        )
+    }
+
+
     stages {
         stage ('Build'){
             steps {
