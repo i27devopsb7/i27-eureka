@@ -66,8 +66,9 @@ pipeline {
             }
             steps {
                 // using maven
-                echo "********** Building ${env.APPLICATION_NAME} Application *************"
-                sh "mvn clean package -DskipTests=true"
+                script {
+                    buildApp.call()
+                }
             }
         }
         // stage ('Sonar') {
@@ -127,6 +128,8 @@ pipeline {
             }
             steps {
                 script {
+                    // image validation
+                    imageValidatiion().call()
                     dockerDeploy('dev', '5761').call()
                 }
             }
@@ -141,6 +144,8 @@ pipeline {
            }
             steps {
                 script{
+                    // image validation
+                    imageValidatiion().call()
                     dockerDeploy('test', '6761').call()
                 }
             }
@@ -155,6 +160,8 @@ pipeline {
             }
             steps {
                 script{
+                    // image validation
+                    imageValidatiion().call()
                     dockerDeploy('stage', '7761').call()
                 }
             }
@@ -178,6 +185,13 @@ pipeline {
         
 }
 
+
+def buildApp() {
+    return {
+        echo "********** Building ${env.APPLICATION_NAME} Application *************"
+        sh "mvn clean package -DskipTests=true" 
+    }
+}
 
 def dockerDeploy(envDeploy, port){
     return {
@@ -211,6 +225,23 @@ def dockerBuildAndPush() {
         sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
         echo "******************************************** Docker Push *********************************"
         sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
+    }
+}
+
+def imageValidatiion() {
+    retun {
+        println ("***************************** Attempt to pull the docker image *********************")
+        try {
+            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
+            println("********************** Image is Pulled Succesfully *************************")
+        }
+        catch(Exception e) {
+            println("*************** OOPS, the docker image is not available...... So creating the image")
+            buildApp().call()
+            dockerBuildAndPush().call()
+
+        }
+
     }
 }
 
