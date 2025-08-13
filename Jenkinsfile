@@ -160,6 +160,7 @@ pipeline {
             }
         }
         stage ('Deploy To Prod') {
+            // approval is needed ?
             when {
                 anyOf {
                     expression { 
