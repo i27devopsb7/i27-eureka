@@ -56,6 +56,14 @@ pipeline {
 
     stages {
         stage ('Build'){
+            when {
+                anyOf {
+                    expression { 
+                        params.buildOnly == 'yes' 
+                        params.dockerPush == 'yes' 
+                    }
+                }
+            }
             steps {
                 // using maven
                 echo "********** Building ${env.APPLICATION_NAME} Application *************"
@@ -86,15 +94,21 @@ pipeline {
 
         //     }
         // }
-        stage ('FormatBuild'){
-            // existing i27-eureka-0.0.1-SNAPSHOT.jar
-            // Destination i27-eureka-buildnumber-brnachname.jar
-            steps {
-                echo "Testing JAR Source: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
-                echo "Testing JAR Destination: i27-${env.APPLICATION_NAME}-${BUILD_NUMBER}-${BRANCH_NAME}.${env.POM_PACKAGING}"
-            }
-        }
+        // stage ('FormatBuild'){
+        //     // existing i27-eureka-0.0.1-SNAPSHOT.jar
+        //     // Destination i27-eureka-buildnumber-brnachname.jar
+        //     steps {
+        //         echo "Testing JAR Source: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
+        //         echo "Testing JAR Destination: i27-${env.APPLICATION_NAME}-${BUILD_NUMBER}-${BRANCH_NAME}.${env.POM_PACKAGING}"
+        //     }
+        // }
         stage ('DockerBuildAndPush') {
+            when {
+                anyOf {
+                    expression {
+                        params.dockerPush == 'yes'
+                }
+            }
             steps {
                 script {
                     dockerBuildAndPush().call()
@@ -103,6 +117,12 @@ pipeline {
             }
         } 
         stage ('Deploy To Dev') {
+            when {
+                anyOf {
+                    expression { 
+                        params.deployToDev == 'yes'
+                    }
+            }
             steps {
                 script {
                     dockerDeploy('dev', '5761').call()
@@ -110,6 +130,12 @@ pipeline {
             }
         }
         stage ('Deploy To test') {
+           when {
+                anyOf {
+                    expression { 
+                        params.deployToTest == 'yes'
+                    }
+            }
             steps {
                 script{
                     dockerDeploy('test', '6761').call()
@@ -117,6 +143,12 @@ pipeline {
             }
         }
         stage ('Deploy To Stage') {
+            when {
+                anyOf {
+                    expression { 
+                        params.deployToStage == 'yes'
+                    }
+            }
             steps {
                 script{
                     dockerDeploy('stage', '7761').call()
@@ -124,6 +156,12 @@ pipeline {
             }
         }
         stage ('Deploy To Prod') {
+            when {
+                anyOf {
+                    expression { 
+                        params.deployToProd == 'yes'
+                    }
+            }
             steps {
                 script{
                     dockerDeploy('prod', '8761').call()
