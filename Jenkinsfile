@@ -229,7 +229,7 @@ def dockerBuildAndPush() {
 }
 
 def imageValidatiion() {
-    retun {
+    return {
         println ("***************************** Attempt to pull the docker image *********************")
         try {
             sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
