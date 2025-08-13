@@ -107,6 +107,7 @@ pipeline {
                 anyOf {
                     expression {
                         params.dockerPush == 'yes'
+                    }
                 }
             }
             steps {
@@ -122,6 +123,7 @@ pipeline {
                     expression { 
                         params.deployToDev == 'yes'
                     }
+                }
             }
             steps {
                 script {
@@ -135,7 +137,8 @@ pipeline {
                     expression { 
                         params.deployToTest == 'yes'
                     }
-            }
+                }
+           }
             steps {
                 script{
                     dockerDeploy('test', '6761').call()
@@ -148,6 +151,7 @@ pipeline {
                     expression { 
                         params.deployToStage == 'yes'
                     }
+                }
             }
             steps {
                 script{
@@ -161,6 +165,7 @@ pipeline {
                     expression { 
                         params.deployToProd == 'yes'
                     }
+                }
             }
             steps {
                 script{
@@ -169,6 +174,7 @@ pipeline {
             }
         }
     }
+        
 }
 
 
