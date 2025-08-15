@@ -172,6 +172,10 @@ pipeline {
         }
         stage ('Deploy To Prod') {
             // approval is needed ?
+            // sivadev and admins
+
+            // mailing implementaion
+
             when {
                 anyOf {
                     expression { 
@@ -183,6 +187,10 @@ pipeline {
                 }
             }
             steps {
+                timeout(time: 300, unit: 'SECONDS') {
+                    input message: "Deploying ${env.APPLICATION_NAME} to production ?", ok: 'yes', submitter: 'i27academy, devlead'
+                }
+                
                 script{
                     dockerDeploy('prod', '8761').call()
                 }
