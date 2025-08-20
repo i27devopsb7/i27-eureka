@@ -1,0 +1,36 @@
+# Deployment yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i27-eureka-app
+  #namespace: i27-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: i27-eureka-app
+  template:
+    metadata:
+      labels:
+        app: i27-eureka-app
+    spec:
+      containers:
+      - name: i27-eureka-container
+        image: DIT # this image will be replaced by the actual image through shared library method
+        ports:
+        - containerPort: 8761
+
+# Service yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: i27-eureka-service
+  #namespace: i27-eureka
+spec:
+  selector:
+    app: i27-eureka-app
+  ports:
+  - protocol: TCP
+    port: 80 # port on the service
+    targetPort: 8761 # port on the container
+  type: NodePort
