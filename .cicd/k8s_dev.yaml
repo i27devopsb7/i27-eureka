@@ -33,4 +33,25 @@ spec:
   - protocol: TCP
     port: 80 # port on the service
     targetPort: 8761 # port on the container
-  type: NodePort
+  type: ClusterIP
+---
+# # Ingress yaml
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: i27-eureka-ingress
+#   namespace: cart-dev-ns
+#   annotations:
+#     kubernetes.io/ingress.class: "gce"
+# spec:
+#   rules:
+#   - host: eureka-dev.i27academy.in
+#     http:
+#       paths:
+#       - pathType: Prefix
+#         path: "/"
+#         backend:
+#           service:
+#             name: i27-eureka-service
+#             port:
+#               number: 80
